@@ -167,23 +167,24 @@ vim.opt.scrolloff = 10
 
 -- mykeymaps
 
-vim.keymap.set("", "<C-u>", "<C-u>zz", { noremap = true })
-vim.keymap.set("", "<C-d>", "<C-d>zz", { noremap = true })
 -- vim.keymap.set('n', '<C-l>', 'm`o<Esc>``')
 -- vim.keymap.set('n', '<C-o>', 'm`O<Esc>``')
 -- vim.keymap.set('n', '<C-l>', 'o<Esc>k')
 -- vim.keymap.set('n', '<C-o>', 'O<Esc>j')
-vim.keymap.set("", "<S-k>", "<S-i>", { noremap = true })
-vim.keymap.set("", "<S-ç>", "A", { noremap = true })
-vim.keymap.set("", "<S-l>", "o", { noremap = true })
+-- vim.keymap.set("", "<S-k>", "<S-i>", { noremap = true })
+-- vim.keymap.set("", "<S-ç>", "A", { noremap = true })
+-- vim.keymap.set("", "<S-l>", "o", { noremap = true })
 
 vim.keymap.set("", "<leader>a", "ggVG", { noremap = true })
 vim.keymap.set("", "o", "k", { noremap = true })
 
-vim.keymap.set("", "ç", "l", { noremap = true })
+vim.keymap.set("", "ñ", "l", { noremap = true })
 vim.keymap.set("", "l", "j", { noremap = true })
 vim.keymap.set("", "k", "h", { noremap = true })
 vim.keymap.set("", "h", "", { noremap = true })
+
+vim.keymap.set("", "<C-u>", "<C-u>zz", { noremap = true })
+vim.keymap.set("", "<C-d>", "<C-d>zz", { noremap = true })
 
 vim.keymap.set("n", "<Esc>", "<cmd>nohlsearch<CR>")
 
@@ -256,7 +257,68 @@ vim.opt.rtp:prepend(lazypath)
 -- NOTE: Here is where you install your plugins.
 require("lazy").setup({
 	-- NOTE: Plugins can be added with a link (or for a github repo: 'owner/repo' link).
-	"tpope/vim-sleuth", -- Detect tabstop and shiftwidth automatically
+	--
+	-- install_plugins
+	"tpope/vim-sleuth",
+	{
+		"chrisgrieser/nvim-various-textobjs",
+		event = "UIEnter",
+		opts = { useDefaultKeymaps = true },
+	},
+	{
+		"kiyoon/treesitter-indent-object.nvim",
+		keys = {
+			{
+				"ai",
+				function()
+					require("treesitter_indent_object.textobj").select_indent_outer()
+				end,
+				mode = { "x", "o" },
+				desc = "Select context-aware indent (outer)",
+			},
+			{
+				"aI",
+				function()
+					require("treesitter_indent_object.textobj").select_indent_outer(true)
+				end,
+				mode = { "x", "o" },
+				desc = "Select context-aware indent (outer, line-wise)",
+			},
+			{
+				"ii",
+				function()
+					require("treesitter_indent_object.textobj").select_indent_inner()
+				end,
+				mode = { "x", "o" },
+				desc = "Select context-aware indent (inner, partial range)",
+			},
+			{
+				"iI",
+				function()
+					require("treesitter_indent_object.textobj").select_indent_inner(true, "V")
+				end,
+				mode = { "x", "o" },
+				desc = "Select context-aware indent (inner, entire range) in line-wise visual mode",
+			},
+		},
+	},
+
+	{
+		"numToStr/Comment.nvim",
+		opts = {
+			-- add any options here
+		},
+	},
+	{
+		"kylechui/nvim-surround",
+		version = "*", -- Use for stability; omit to use `main` branch for the latest features
+		event = "VeryLazy",
+		config = function()
+			require("nvim-surround").setup({
+				-- Configuration here, or leave empty to use defaults
+			})
+		end,
+	}, -- Detect tabstop and shiftwidth automatically
 	{
 		"amitds1997/remote-nvim.nvim",
 		version = "v0.3.9", -- Pin to GitHub releases
